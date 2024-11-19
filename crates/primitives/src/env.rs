@@ -257,6 +257,7 @@ impl Env {
                 // Add transaction cost to balance to ensure execution doesn't fail.
                 account.info.balance = balance_check;
             } else {
+                println!("validate_tx_against_state address: {:?} ", self.tx.caller);
                 return Err(InvalidTransaction::LackOfFundForMaxFee {
                     fee: Box::new(balance_check),
                     balance: Box::new(account.info.balance),

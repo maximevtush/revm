@@ -226,6 +226,11 @@ pub fn deduct_caller<SPEC: Spec, EXT, DB: Database>(
             .expect("L1BlockInfo should be loaded")
             .calculate_tx_l1_cost(enveloped_tx, SPEC::SPEC_ID);
         if tx_l1_cost.gt(&caller_account.info.balance) {
+            println!(
+                "deduct_caller address: {:?}",
+                context.evm.inner.env.tx.caller
+            );
+
             return Err(EVMError::Transaction(
                 InvalidTransaction::LackOfFundForMaxFee {
                     fee: tx_l1_cost.into(),
