@@ -324,12 +324,14 @@ impl<EXT, DB: Database> Evm<'_, EXT, DB> {
 
     /// Transact pre-verified transaction.
     fn transact_preverified_inner(&mut self, initial_gas_spend: u64) -> EVMResult<DB::Error> {
+        println!("Evm::transact_preverified_inner: start");
         let spec_id = self.spec_id();
         let ctx = &mut self.context;
         let pre_exec = self.handler.pre_execution();
 
         // load access list and beneficiary if needed.
         pre_exec.load_accounts(ctx)?;
+        println!("Evm::transact_preverified_inner: load_accounts");
 
         // load precompiles
         let precompiles = pre_exec.load_precompiles();
@@ -337,6 +339,7 @@ impl<EXT, DB: Database> Evm<'_, EXT, DB> {
 
         // deduce caller balance with its limit.
         pre_exec.deduct_caller(ctx)?;
+        println!("Evm::transact_preverified_inner: deduct_caller");
 
         let gas_limit = ctx.evm.env.tx.gas_limit - initial_gas_spend;
 
@@ -365,6 +368,7 @@ impl<EXT, DB: Database> Evm<'_, EXT, DB> {
                 }
             }
         };
+        println!("Evm::transact_preverified_inner: first_frame_or_result");
         // Starts the main running loop.
         let mut result = match first_frame_or_result {
             FrameOrResult::Frame(first_frame) => self.run_the_loop(first_frame)?,
@@ -377,6 +381,7 @@ impl<EXT, DB: Database> Evm<'_, EXT, DB> {
         self.handler
             .execution()
             .last_frame_return(ctx, &mut result)?;
+        println!("Evm::transact_preverified_inner: last_frame_return");
 
         let post_exec = self.handler.post_execution();
         // Reimburse the caller
