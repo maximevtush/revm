@@ -203,6 +203,10 @@ pub fn deduct_caller<SPEC: Spec, EXT, DB: Database>(
     if let Some(mint) = context.evm.inner.env.tx.optimism.mint {
         caller_account.info.balance += U256::from(mint);
     }
+    println!(
+        "before deduct_caller address: {:?}",
+        context.evm.inner.env.tx.caller
+    );
 
     // We deduct caller max balance after minting and before deducing the
     // l1 cost, max values is already checked in pre_validate but l1 cost wasn't.
