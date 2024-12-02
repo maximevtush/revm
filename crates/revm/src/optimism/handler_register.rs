@@ -204,8 +204,9 @@ pub fn deduct_caller<SPEC: Spec, EXT, DB: Database>(
         caller_account.info.balance += U256::from(mint);
     }
     println!(
-        "before deduct_caller address: {:?}",
-        context.evm.inner.env.tx.caller
+        "before deduct_caller address: {:?}, balance: {:?}",
+        context.evm.inner.env.tx.caller,
+        caller_account.info.balance
     );
 
     // We deduct caller max balance after minting and before deducing the
